@@ -1,0 +1,66 @@
+body {
+    font-family: arial;
+    font-size: 14px;
+  }
+
+
+  #name, #phone, #type, #birth {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+    width: 100%;
+    font-size: larger;
+    display: block;
+    border: 1px solid rgb(212, 212, 212);
+    background-color: #fff;
+    --webkit-appearance: none;  
+    /* --moz-appearance: none;   */
+}
+#name, #phone{
+    padding: 6px;
+}
+#type{
+    padding: 7px;
+    
+}
+#birth{
+    padding: 20px;
+}
+
+.celdas {
+    margin: 0;
+    padding: 2px;
+    position: relative;
+}
+.contact_icon{
+    position: absolute; 
+    left: 5px; top: 10px;
+    height: 3rem;
+}
+
+table {
+    font-size: 20px;
+    
+}
+td {
+    padding: 1rem;
+}
+
+h1:first-child:hover{
+    cursor: pointer;
+}
+
+th:nth-child(1){
+    width: 30%;
+}
+th:nth-child(2) {
+    width: 30%;
+}
+th:nth-child(3) {
+    width: 15%;
+}
+th:nth-child(4) {
+    width: 15%;
+}
+th:nth-child(5) {
+    width: 10%;
+}
