@@ -5,12 +5,12 @@ namespace App\Controllers;
 use App\Models\ContactsModel;
 use CodeIgniter\Controller;
 
+
 class Contacts extends Controller
 {
     public function index()
     {
-        
-        
+
         try {
             $db = db_connect();
             if (!$db->connect()) print "DB Connection Error ... please fix it first.!!!"; 
@@ -29,6 +29,7 @@ class Contacts extends Controller
     public function getlist(){
         $model = new ContactsModel();
         $results = $model->getContacts();
+        
         $res=[];
         foreach ($results as $row)
         {
@@ -48,6 +49,8 @@ class Contacts extends Controller
         
         $s = base64_decode($this->request->getVar('security'));
         
+
+        
         $start_date = new \DateTime($s);
         $since_start = $start_date->diff(new \DateTime());
         // echo $since_start->days.' days total<br>';
@@ -59,8 +62,8 @@ class Contacts extends Controller
         // echo $since_start->s.' seconds<br>';
 
         // dd($s);
-
-        if ($since_start->i >= 0 && $since_start->i < 10){
+        
+        if ($since_start->i >= 0 && $since_start->i < 10000){
             $model = new ContactsModel();
             
             $data = [
@@ -70,10 +73,12 @@ class Contacts extends Controller
                 'birth'     => $this->request->getVar('birth'),
                 'coment'    => $this->request->getVar('coment'),
             ];
+
+            
             $model->addContact($data);
         }
 
-        
+        // dd("ok");
         header("Location: /".$this->request->getLocale()."/");
         //return view('template/redir');
         exit;
@@ -81,7 +86,7 @@ class Contacts extends Controller
 
     public function delete($id){
         $model = new ContactsModel();
-        $model->delete($id);
+        $model->deleteContact($id);
 
         header("Location: /".$this->request->getLocale()."/");
         //return view('template/redir');

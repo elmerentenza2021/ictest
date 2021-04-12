@@ -219,6 +219,7 @@
 <script >
 
     $.get("/contacts/getlist", function(data){
+        
         ko.applyBindings(new MyViewModel(data));
     });
     

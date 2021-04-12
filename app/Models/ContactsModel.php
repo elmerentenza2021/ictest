@@ -2,77 +2,58 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+//use CodeIgniter\Model;
+use App\Models\ContactsRespository;
 
-class ContactsModel extends Model
+class ContactsModel extends ContactsRespository
 {
     protected $table = 'contact';
     protected $primaryKey = 'id';
     protected $allowedFields = ['name', 'type', 'phone', 'birth', 'coment']; 
     protected $createdField  = 'created_at';
 
+    public function __construct(){
+        parent::__construct();
+    }
+
     public function addContact($data){
-        $db = \Config\Database::connect();
-        $sql = "INSERT INTO ".
-            "contact(type_id, name, phone, birth, coment, created) ".
-            "VALUES ('".
-                $data['type_id']."', '".
-                $data['name']."', '".
-                $data['phone']."', '".
-                $data['birth']."', '".
-                $data['coment']."', ".
-                "now() )";
-        // dd($sql);
-        return $db->query($sql);
+        
+        // do something or check before insert... 
+        // if it is necesary
+        
+        $this->addItem($data);
+        
     }
 
     // to list in the table
     public function getContacts(){
-        $db = \Config\Database::connect();
-        $sql = "SELECT ".
-                "contact.id as id, ".
-                "contact.name as name, ".
-                "types.type as type, ".
-                "contact.phone as phone, ".
-                "contact.birth as birth ".
-                //"contact.coment as coment ".
-                "FROM contact INNER JOIN types on contact.type_id = types.id";
-        //dd($sql);
-        $query = $db->query($sql);
-        return $results = $query->getResult();
+        
+        return $this->findAllItems();
+        
     }
 
     // to show the info on updating...
     public function getContactById($id){
-        //dd($id);
-        $db = \Config\Database::connect();
-        $sql = "SELECT ".
-                "contact.id as id, ".
-                "contact.name as name, ".
-                "contact.type_id as type, ".
-                "contact.phone as phone, ".
-                "contact.birth as birth, ".
-                "contact.coment as coment ".
-                "FROM contact INNER JOIN types on contact.type_id = types.id ".
-                "where contact.id = ". $id;
+
+        return $this->findItemById($id);
         
-        // dd($sql);
-        $query = $db->query($sql);
-        $results = $query->getResultArray();
-        
-        return $results[0];
     }
 
+    
     public function updateContact($data){
-        $db = \Config\Database::connect();
-        $query = "UPDATE contact SET ".
-            "type_id=".$data['type_id'].", ".
-            "name='".$data['name']."', ".
-            "phone='".$data['phone']."', ".
-            "birth='".$data['birth']."', ".
-            "coment='".$data['coment']."' ".
-            " WHERE id=".$data['id']." ";
-        return $db->query($query);
+        
+        $this->updateItem($data);
+    }
+
+
+    public function deleteContact($id){
+        
+        $this->deleteItem($id);
+    }
+
+
+    public function doTest(){
+        return $this->test();
     }
     
 }
