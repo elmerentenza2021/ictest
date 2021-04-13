@@ -10,7 +10,6 @@
                 <h2 style="color:#ce8484; font-size: 28px; " ><?php  
                 echo lang('msg.create_reservation');  ?></h2>
             </div>
-
             
             <div class="col-lg-7 pt-3" style="margin: 0; padding: 0;">
                 <h4 style="font-size: 15px; color: gray;">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nulla, earum et nihil dolore culpa delenitinihil dolore culpa delenitinihil dolore culpa delenitinihil!</h4>    
@@ -19,7 +18,6 @@
         </div>
     </div>
 </div>
-
 
 
 
@@ -38,13 +36,14 @@
             
             const typesList = data;
             var sel = document.getElementById("type");
-            var opt = document.createElement("option");
-            opt.setAttribute("value", "");
+            // var opt = document.createElement("option");
+            // opt.setAttribute("value", "");
             
-            opt.setAttribute("style", "color: #fff;");
-            opt.text = "<?php  
-                echo lang('msg.Type'); ?>";
-            sel.add(opt);
+            // //selected disabled hidden
+            
+            // opt.setAttribute("style", "color: #fff;");
+            // opt.text = "";
+            // sel.add(opt);
             
             typesList.map((item) => {
                 var sel = document.getElementById("type");
@@ -171,17 +170,20 @@
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas" >
                         <img class="contact_icon" src="/images/world2.png" alt="" >
-                        <select required  style="padding-left: 3.5rem;" name="type" id="type"  >
+                        <select required style="padding-left: 3.5rem;" name="type" id="type"  >
+                            <option value="" selected disabled hidden><?php  
+                                echo lang('msg.Type'); ?></option>
 
                         </select>
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas">
                         <img class="contact_icon" src="/images/telef2.png" alt=""  >
-                        <input style="padding-left: 3.5rem;" type="text" id="phone" name="phone" value="" placeholder="<?php  
-                        echo lang('msg.Phone'); ?>">
+                        <input style="padding-left: 3.5rem;" type="number" id="phone" name="phone" value="" placeholder="<?php  
+                        echo lang('msg.Phone'); ?>" 
+                        >
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas">
-                        <input required  style="padding: 0.5rem 0; " type="date" id="birth" name="birth" >
+                        <input required style="padding: 0.5rem 0; " type="date" id="birth" name="birth" >
                     </div>
                     
             </div>
@@ -195,7 +197,6 @@
         <div class="container mt-3">
             <div class="row justify-content-end" >
                 
-                
                 <div class="col-lg-2 col-md-2 col-sm-3 mb-3"  >
                     <button class="btn btn-block btn-primary " id="idbtnlist" data-bind="click: init" type="button"><?php  
                     echo lang('msg.List'); ?></button>
@@ -207,13 +208,9 @@
 
             </div>
         </div>
-        <input type="hidden" id="selectedItem" name="selectedItem" value="">
+        <input  type="hidden" id="selectedItem" name="selectedItem" value="">
     </form>
-    
-    
 </div>
-
-
 
 <script src="/js/model.js"></script>
 <script >
@@ -276,11 +273,9 @@
                         
                     },2000);
                     window.location.replace("/<?php echo $locale; ?>/load/"+v);
-                    
                 }
             })
         }
-                
     }
 
     function radioClick(v){
@@ -288,11 +283,75 @@
         // console.log($('#selectedItem').val());
     }
 
-    $('#contact-form').submit(function (e){
-        //e.preventDefault();
-        $('#idcoment').val($("#txtEditor").Editor('getText'));
-        //$('#contact-form').submit();
+    // $('#btnsend').click(function () {
         
+    
+    // });
+
+    function validDate(){
+        /**
+            validaciones finales antes de hacer el submit.
+        */
+        var d_user = $('#birth').val()
+        var a_user = d_user.split("-")
+        var year2 = Number(a_user[0])
+        var month2 = Number(a_user[1])
+        var day2 = Number(a_user[2])
+
+        var n = new Date();
+        
+        var arr = n.toLocaleDateString().split("/")
+        
+        var day1 = Number(arr[0])
+        var month1 = Number(arr[1])
+        var year1 = Number(arr[2])
+
+        if (year2 > year1){
+            
+            return false
+        }
+        console.log("year ok", year2 ,"----", year1)
+
+        if (year2 === year1){
+
+            if (month2 > month1){
+                return false
+            }
+            console.log("month ok", month2 ,"----", month1)
+
+            if (month2 === month1){
+
+                if (day2 >= day1){
+                    return false
+                }
+
+                console.log("day ok", day2 ,"----", day1)
+            }
+        }
+
+        return true
+    }
+
+    $('#contact-form').submit(function (e){
+        // e.preventDefault();
+        $('#idcoment').val($("#txtEditor").Editor('getText'));
+
+        if (!validDate()){
+            e.preventDefault();
+            $('#birth').focus()
+            $('#birth').css("border-color", "red");
+
+        }
+
+        
+
+        // let telef = $('#phone').val()
+        // let regexp = '/ ^ \ (? (\ d {3}) \)? [-]? (\ d {3}) [-]? (\ d {4}) $ /'
+        // let res = regexp.test(telef)
+        // console.log("todo ok");
+
+
+                
     });
 </script>
 
