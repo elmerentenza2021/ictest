@@ -6,22 +6,26 @@ use App\Models\ContactsModel;
 use CodeIgniter\Controller;
 
 
+use App\Libraries\MySecurity;
+use App\Libraries\ConnectionTester;
+
 class Contacts extends Controller
 {
+    public function __construct(){
+
+        $this->connTester = new ConnectionTester();
+        $this->chkSecurity = new MySecurity();
+    }
+    
     public function index()
     {
 
-        try {
-            $db = db_connect();
-            if (!$db->connect()) print "DB Connection Error ... please fix it first.!!!"; 
-
-        } catch (\Throwable $th) {
-            throw $th;
-        }
+        
+        $this->connTester->testConnection();
         
         $data = [
             'locale' => $this->request->getLocale(),
-            'security' => base64_encode(date("Y-m-d H:i:s"))
+            'security' => $this->chkSecurity->getCode()
         ];
         return view('template/main', $data);
     }
@@ -30,57 +34,17 @@ class Contacts extends Controller
         $model = new ContactsModel();
         $results = $model->getContacts();
         
-        $res=[];
-        foreach ($results as $row)
-        {
-            $e = [
-                'id'    => $row->id,
-                'name'  => $row->name,
-                'type'  => $row->type,
-                'phone' => $row->phone,
-                'birth' => $row->birth
-            ];
-            $res[] = $e;
-        }
-        return $this->response->setJSON($res);
+        return $this->response->setJSON($results);
     }
 
     public function add(){
         
-        $s = base64_decode($this->request->getVar('security'));
-        
-
-        
-        $start_date = new \DateTime($s);
-        $since_start = $start_date->diff(new \DateTime());
-        // echo $since_start->days.' days total<br>';
-        // echo $since_start->y.' years<br>';
-        // echo $since_start->m.' months<br>';
-        // echo $since_start->d.' days<br>';
-        // echo $since_start->h.' hours<br>';
-        // echo $since_start->i.' minutes<br>';
-        // echo $since_start->s.' seconds<br>';
-
-        // dd($s);
-        
-        if ($since_start->i >= 0 && $since_start->i < 10000){
+        if ($this->chkSecurity->isSecure($this->request->getVar('security'))){
             $model = new ContactsModel();
-            
-            $data = [
-                'name'      => $this->request->getVar('name'),
-                'type_id'   => $this->request->getVar('type'),
-                'phone'     => $this->request->getVar('phone'),
-                'birth'     => $this->request->getVar('birth'),
-                'coment'    => $this->request->getVar('coment'),
-            ];
-
-            
-            $model->addContact($data);
+            $model->addContact($this->request);
         }
 
-        // dd("ok");
         header("Location: /".$this->request->getLocale()."/");
-        //return view('template/redir');
         exit;
     }
 
@@ -89,63 +53,41 @@ class Contacts extends Controller
         $model->deleteContact($id);
 
         header("Location: /".$this->request->getLocale()."/");
-        //return view('template/redir');
         exit;
     }
 
     public function load($id){
         $model = new ContactsModel();
-        $item = $model->getContactById($id);
-        //dd($item);
-        $data = [];
-        if ($item){
-            $data = [
-                'flag'  => 'updating',
-                'id'    => $item['id'],
-                'name'  => $item['name'],
-                'type'  => $item['type'],
-                'phone' => $item['phone'],
-                'birth' => $item['birth'],
-                'coment'=> $item['coment'],
-                
-                'locale' => $this->request->getLocale(),
-                'security' => base64_encode(date("Y-m-d H:i:s"))
-            ];
+        $data = $model->getContactById($id);
+        
+        if ($data){
+            $data['locale'] = $this->request->getLocale();
+            $data['security'] = $this->chkSecurity->getCode();
         }
-        // dd($data);
 
         echo view('template/main', $data);
     }
 
     public function update($id){
 
-
         $model = new ContactsModel();
-        $item = $model->getContactById($id);
+        $model->updateContact($id, $this->request);
         
-        
-        if ($item){
-            $data = [
-                'id'    => $id,
-                'name'  => $this->request->getVar('name'),
-                'type_id'  => $this->request->getVar('type'),
-                'phone' => $this->request->getVar('phone'),
-                'birth' => $this->request->getVar('birth'),
-                'coment'=> $this->request->getVar('coment'),
-                'security' => base64_encode(date("Y-m-d H:i:s"))
-            ];
-            
-            $r = $model->updateContact($data);
-        }
-
         header("Location: /".$this->request->getLocale()."/");
-        // return view('template/redir');
         exit;
     }
 
     public function test(){
+        
+        // $text='';
+        // $text = \strtolower($text);
+        // $regex='/^[a-z]+[a-z ]+$/';
+        // print $text."<br />";
+        // echo (preg_match($regex,$text)) ? "CORRECTO" : "ERROR";        
+        
+        
         $model = new ContactsModel();
-        $model->getContacts();
+        $model->doTest();
     }
     
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 //use CodeIgniter\Model;
 use App\Models\ContactsRespository;
+use App\Libraries\Validator;
 
 class ContactsModel extends ContactsRespository
 {
@@ -11,39 +12,125 @@ class ContactsModel extends ContactsRespository
     protected $primaryKey = 'id';
     protected $allowedFields = ['name', 'type', 'phone', 'birth', 'coment']; 
     protected $createdField  = 'created_at';
-
+    
     public function __construct(){
+        
         parent::__construct();
+
+        $this->validator = new Validator();
     }
 
-    public function addContact($data){
+    public function addContact($request){
         
-        // do something or check before insert... 
-        // if it is necesary
+        $errors = 0;
+        $data = [
+            'name'      => '',
+            'type_id'   => 0,
+            'phone'     => '',
+            'birth'     => '',
+            'coment'    => '',
+        ];
+
+        if ($this->validator->Name($request->getVar('name'))){
+            $data['name'] = $request->getVar('name');
+        }
+        else $errors++;
+
+        if ($request->getVar('type'))
+            $data['type_id'] = $request->getVar('type');
+        else $errors++;
+
         
-        $this->addItem($data);
+        if ($this->validator->Phone($request->getVar('phone'))){
+            $data['phone'] = $request->getVar('phone');
+        }
+        //else $errors++; /// this field is not required
+
+        if ($this->validator->Birthday($request->getVar('birth'))){
+            $data['birth'] = $request->getVar('birth');
+        }
+        else $errors++;
+
+        if ($request->getVar('coment'))
+            $data['coment'] = $request->getVar('coment');
+        else $errors++;
         
+        if (!$errors)
+            $this->addItem($data);
     }
 
     // to list in the table
     public function getContacts(){
         
-        return $this->findAllItems();
+        $results = $this->findAllItems();
+        
+        $res=[];
+        foreach ($results as $row)
+        {
+            $e = [
+                'id'    => $row->id,
+                'name'  => $row->name,
+                'type'  => $row->type,
+                'phone' => $row->phone,
+                'birth' => $row->birth
+            ];
+            $res[] = $e;
+        }
+        return $res;
         
     }
 
     // to show the info on updating...
     public function getContactById($id){
-
-        return $this->findItemById($id);
+        $item = $this->findItemById($id);
         
+        $data = [];
+        if ($item){
+            $data = [
+                'flag'  => 'updating',
+                'id'    => $item['id'],
+                'name'  => $item['name'],
+                'type'  => $item['type'],
+                'phone' => $item['phone'],
+                'birth' => $item['birth'],
+                'coment'=> $item['coment'],
+            ];
+        }
+        // dd($data);
+        return $data;
     }
 
     
-    public function updateContact($data){
+    public function updateContact($id, $request){
         
-        $this->updateItem($data);
-    }
+        $item = $this->getContactById($id);
+        $data = [];
+        if ($item){
+            $data['id'] = $id;
+
+            if ($request->getVar('name')) {
+                $data['name'] = $request->getVar('name');
+            }
+                
+            if ($request->getVar('type')) {
+                $data['type_id'] = $request->getVar('type');
+            }
+             
+            if ($request->getVar('phone')) {
+                $data['phone'] = $request->getVar('phone');
+            }
+            
+            if ($request->getVar('birth')) {
+                $data['birth'] = $request->getVar('birth');
+            }
+
+            if ($request->getVar('coment')) {
+                $data['coment'] = $request->getVar('coment');
+            }
+   
+            $this->updateItem($data);
+        }
+    }   
 
 
     public function deleteContact($id){
@@ -53,6 +140,12 @@ class ContactsModel extends ContactsRespository
 
 
     public function doTest(){
+
+        $d = '2021-05-12';
+        print ($this->validator->Birthday($d)) ?
+            $d." -CORRECTO" : $d." -INCORRECTO";
+        return ;
+
         return $this->test();
     }
     

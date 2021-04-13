@@ -8,7 +8,10 @@ use CodeIgniter\Model;
 
 class ContactsRespository extends Model //implements IRepository
 {
-
+    protected $table;
+    protected $primaryKey;
+    protected $allowedFields; 
+    protected $createdField;
 
     public function __construct(){
 
@@ -87,6 +90,7 @@ class ContactsRespository extends Model //implements IRepository
     }
 
     protected function test(){
+        dd($this->allowedFields);
         return "test ok";
     }
     

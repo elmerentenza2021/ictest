@@ -38,6 +38,8 @@ $routes->add('/types/delete/(:num)', 'Types::delete/$1');
 $routes->add('/types/add', 'Types::add');
 $routes->add('/types/', 'Types::index');
 
+$routes->add('/test', 'Contacts::test');
+
 $routes->add('{locale}/', 'Contacts::index');
 $routes->add('{locale}/add', 'Contacts::add');
 $routes->add('{locale}/delete/(:num)', 'Contacts::delete/$1');

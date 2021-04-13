@@ -166,7 +166,7 @@
                         <img class="contact_icon" src="/images/person2.png" alt="" >
                         
                         <input required style="padding-left: 3.5rem;" type="text" id="name" name="name" placeholder="<?php  
-                        echo lang('msg.Name'); ?>" value="">
+                        echo lang('msg.Name'); ?>" value="" pattern="/^[A-Z]$/">
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas" >
                         <img class="contact_icon" src="/images/world2.png" alt="" >
