@@ -165,12 +165,12 @@
                     <div class="col-lg-3 col-sm-3 celdas" >
                         <img class="contact_icon" src="/images/person2.png" alt="" >
                         
-                        <input  style="padding-left: 3.5rem;" type="text" id="name" name="name" placeholder="<?php  
+                        <input required style="padding-left: 3.5rem;" type="text" id="name" name="name" placeholder="<?php  
                         echo lang('msg.Name'); ?>" value="">
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas" >
                         <img class="contact_icon" src="/images/world2.png" alt="" >
-                        <select  style="padding-left: 3.5rem;" name="type" id="type"  >
+                        <select required style="padding-left: 3.5rem;" name="type" id="type"  >
                             <option value="" selected disabled hidden><?php  
                                 echo lang('msg.Type'); ?></option>
 
@@ -179,11 +179,15 @@
                     <div class="col-lg-3 col-sm-3 celdas">
                         <img class="contact_icon" src="/images/telef2.png" alt=""  >
                         <input  style="padding-left: 3.5rem;" type="number" id="phone" name="phone" value="" placeholder="<?php  
-                        echo lang('msg.Phone'); ?> +1-305-524-3499" 
+                        echo lang('msg.Phone'); ?> 1234567890" 
+                        min="1000000000"
+                        max="999999999999"
+                        minlength="8"
+                        maxlength="12"
                         >
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas">
-                        <input  style="padding: 0.5rem 0; " type="date" id="birth" name="birth" >
+                        <input required style="padding: 0.5rem 0; " type="date" id="birth" name="birth" >
                     </div>
                     
             </div>
@@ -306,7 +310,9 @@
         var month1 = Number(arr[1])
         var year1 = Number(arr[2])
 
-        if (year2 > year1){
+        var dif = year1 - year2
+
+        if (year2 > year1 || dif > 115){
             
             return false
         }
@@ -339,8 +345,8 @@
         if (!validDate()){
             e.preventDefault();
             $('#birth').focus()
-            $('#birth').css("border-color", "red");
-
+            
+            alert($('#birth').val()+"... NO !!!!")
         }
 
         

@@ -64,3 +64,21 @@ th:nth-child(4) {
 th:nth-child(5) {
     width: 10%;
 }
+
+
+
+
+
+
+input:invalid {
+    border: 2px dashed red;
+}
+
+input:invalid:required {
+    /*background-image: linear-gradient(to right, pink, lightgreen);*/
+    border-color: red;
+}
+
+input:valid {
+    border: 2px solid black;
+}
