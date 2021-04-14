@@ -141,9 +141,9 @@ class ContactsModel extends ContactsRespository
 
     public function doTest(){
 
-        $d = '2021-05-12';
-        print ($this->validator->Birthday($d)) ?
-            $d." -CORRECTO" : $d." -INCORRECTO";
+        $d = 'Elmer Entenza';
+        print ($this->validator->Name($d)) ?
+            $d." ---CORRECTO" : $d." ----INCORRECTO";
         return ;
 
         return $this->test();

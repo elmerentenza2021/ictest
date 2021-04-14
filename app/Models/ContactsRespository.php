@@ -24,15 +24,16 @@ class ContactsRespository extends Model //implements IRepository
         $db = \Config\Database::connect();
         $sql = "INSERT INTO ".
             "contact(type_id, name, phone, birth, coment, created) ".
-            "VALUES ('".
-                $data['type_id']."', '".
-                $data['name']."', '".
-                $data['phone']."', '".
-                $data['birth']."', '".
-                $data['coment']."', ".
+            "VALUES (".
+
+            $db->escape($data['type_id']).", '".
+            $db->escapeString($data['name'])."', '".
+            $db->escapeString($data['phone'])."', '".
+            $db->escapeString($data['birth'])."', '".
+            $db->escapeString($data['coment'])."', ".
                 "now() )";
         // dd($sql);
-        return $db->query($sql);
+        return $db->simpleQuery($sql);
     }
 
     protected function findAllItems($limit=0) {
@@ -64,7 +65,7 @@ class ContactsRespository extends Model //implements IRepository
                 "contact.birth as birth, ".
                 "contact.coment as coment ".
                 "FROM contact INNER JOIN types on contact.type_id = types.id ".
-                "where contact.id = ". $id;
+                "where contact.id = ". $db->escape($id);
         
         // dd($sql);
         $query = $db->query($sql);
@@ -76,13 +77,22 @@ class ContactsRespository extends Model //implements IRepository
     protected function updateItem($data){
         $db = \Config\Database::connect();
         $query = "UPDATE contact SET ".
-            "type_id=".$data['type_id'].", ".
-            "name='".$data['name']."', ".
-            "phone='".$data['phone']."', ".
-            "birth='".$data['birth']."', ".
-            "coment='".$data['coment']."' ".
-            " WHERE id=".$data['id']." ";
-        return $db->query($query);        
+                    "type_id=".$db->escape($data['type_id'])." ";
+        if ($data['name']) 
+            $query .= ", name='".$db->escapeString($data['name'])."' ";
+
+        if ($data['phone']) 
+            $query .= ", phone='".$db->escapeString($data['phone'])."' ";
+
+        if ($data['birth']) 
+            $query .= ", birth='".$db->escapeString($data['birth'])."' ";
+
+        if ($data['coment']) 
+            $query .= ", coment='".$db->escapeString($data['coment'])."' ";
+        
+        $query .= " WHERE id=".$db->escape($data['id'])." ";
+
+        return $db->simpleQuery($query);        
     }
 
     protected function deleteItem($id){

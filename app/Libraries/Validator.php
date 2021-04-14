@@ -23,7 +23,7 @@ class Validator{
 
 
     public function Birthday($str){
-        $debug = true;
+        $debug = false;
         
         // it has to be past, not future
         //2023-12-31

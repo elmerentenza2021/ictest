@@ -15,11 +15,11 @@ class Contacts extends Controller
 
         $this->connTester = new ConnectionTester();
         $this->chkSecurity = new MySecurity();
+        $this->model = new ContactsModel();
     }
     
     public function index()
     {
-
         
         $this->connTester->testConnection();
         
@@ -31,17 +31,15 @@ class Contacts extends Controller
     }
     
     public function getlist(){
-        $model = new ContactsModel();
-        $results = $model->getContacts();
         
+        $results = $this->model->getContacts();
         return $this->response->setJSON($results);
     }
 
     public function add(){
         
         if ($this->chkSecurity->isSecure($this->request->getVar('security'))){
-            $model = new ContactsModel();
-            $model->addContact($this->request);
+            $this->model->addContact($this->request);
         }
 
         header("Location: /".$this->request->getLocale()."/");
@@ -49,16 +47,16 @@ class Contacts extends Controller
     }
 
     public function delete($id){
-        $model = new ContactsModel();
-        $model->deleteContact($id);
+        
+        $this->model->deleteContact($id);
 
         header("Location: /".$this->request->getLocale()."/");
         exit;
     }
 
     public function load($id){
-        $model = new ContactsModel();
-        $data = $model->getContactById($id);
+        
+        $data = $this->model->getContactById($id);
         
         if ($data){
             $data['locale'] = $this->request->getLocale();
@@ -70,8 +68,8 @@ class Contacts extends Controller
 
     public function update($id){
 
-        $model = new ContactsModel();
-        $model->updateContact($id, $this->request);
+        
+        $this->model->updateContact($id, $this->request);
         
         header("Location: /".$this->request->getLocale()."/");
         exit;
@@ -85,9 +83,7 @@ class Contacts extends Controller
         // print $text."<br />";
         // echo (preg_match($regex,$text)) ? "CORRECTO" : "ERROR";        
         
-        
-        $model = new ContactsModel();
-        $model->doTest();
+        $this->model->doTest();
     }
     
 }

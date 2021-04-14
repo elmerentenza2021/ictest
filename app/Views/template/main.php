@@ -166,7 +166,7 @@
                         <img class="contact_icon" src="/images/person2.png" alt="" >
                         
                         <input required style="padding-left: 3.5rem;" type="text" id="name" name="name" placeholder="<?php  
-                        echo lang('msg.Name'); ?>" value="" pattern="/^[A-Z]$/">
+                        echo lang('msg.Name'); ?>" value="" pattern="^[a-zA-Z ]+$">
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas" >
                         <img class="contact_icon" src="/images/world2.png" alt="" >
@@ -189,11 +189,11 @@
                     <div class="col-lg-3 col-sm-3 celdas">
                         <input required style="padding: 0.5rem 0; " type="date" id="birth" name="birth" >
                     </div>
-                    
+
             </div>
             <div class="row">
                 <div class="col-lg-12 " style="padding: 0; margin: 0; background-color: #fff; margin-top: 1rem;">
-                    <textarea  id="txtEditor"></textarea> 
+                    <textarea id="txtEditor"></textarea> 
                 </div>
             </div>
         </div>
@@ -209,7 +209,6 @@
                     <button class="btn btn-block btn-danger" id="btnsend" type="submit"><?php  
                         echo lang('msg.Send'); ?></button>
                 </div>
-
             </div>
         </div>
         <input  type="hidden" id="selectedItem" name="selectedItem" value="">
