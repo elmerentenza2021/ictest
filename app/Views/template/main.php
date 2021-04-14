@@ -178,12 +178,11 @@
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas">
                         <img class="contact_icon" src="/images/telef2.png" alt=""  >
-                        <input  style="padding-left: 3.5rem;" type="number" id="phone" name="phone" value="" placeholder="<?php  
-                        echo lang('msg.Phone'); ?> 1234567890" 
-                        min="1000000000"
-                        max="999999999999"
+                        <input  style="padding-left: 3.5rem;" type="tel" id="phone" name="phone" value="" placeholder="<?php  
+                        echo lang('msg.Phone'); ?> +1234567890" 
                         minlength="8"
-                        maxlength="12"
+                        min="1"
+                        pattern="^(\+|\d)[0-9]{7,16}$"
                         >
                     </div>
                     <div class="col-lg-3 col-sm-3 celdas">
